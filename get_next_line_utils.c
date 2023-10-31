@@ -6,28 +6,27 @@
 /*   By: ottouti <ottouti@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:41:14 by ottouti           #+#    #+#             */
-/*   Updated: 2023/10/30 19:12:41 by ottouti          ###   ########.fr       */
+/*   Updated: 2023/10/30 20:39:58 by ottouti          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 int	found_newline(t_list *list)
 {
 	int	i;
+	t_list	*last_node;
 	
 	if (!list)
 		return (0);
-	while(list)
+	last_node = find_last_node(list);
+	i = 0;
+	while(last_node -> str_buffer[i])
 	{
-		i = 0;
-		while(list -> str_buffer[i])
-		{
-			if (list -> str_buffer[i] == '\n')
-				return (1);
-			i++;
-		}
-		list = list -> next;
+		if (last_node -> str_buffer[i] == '\n')
+			return (1);
+		i++;
 	}
 	return (0);
 }
@@ -39,8 +38,8 @@ t_list	*find_last_node(t_list *list)
 	if (!list)
 		return (NULL);
 	current = list;
-	while (list -> next != NULL)
-		current = list -> next;
+	while (current -> next != NULL)
+		current = current -> next;
 	return (current);
 }
 
@@ -63,4 +62,52 @@ void	copy_string(char *buffer, t_list *node)
 		i++;
 	}
 	node -> str_buffer[i] = '\0';
+}
+
+char	*append(t_list *list)
+{
+	int 	i;
+	int		j;
+	int 	len;
+	char	*line;
+	
+	if (!list)
+		return (NULL);
+	len = bytes_to_newline(list);
+	printf("len = %d\n", len);
+	line = (char *) malloc(len + 1 * sizeof(char));
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (list)
+	{
+		j = 0;
+		while (list -> str_buffer[j] && i != len)
+			line[i++] = list -> str_buffer[j++];
+		list = list -> next;
+	}
+	line[i] = '\0';
+	return (line);
+}
+
+int	bytes_to_newline(t_list *list)
+{
+	int len;
+	int	i;
+
+	len = 0;
+	if (!list)
+		return (len);
+	while (list)
+	{
+		i = 0;
+		while (list -> str_buffer[i] != '\n'
+			&& list -> str_buffer[i] != '\0')
+		{
+			i++;
+			len++;
+		}
+		list = list -> next;
+	}
+	return (len);
 }
