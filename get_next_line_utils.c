@@ -6,7 +6,7 @@
 /*   By: ottouti <ottouti@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:41:14 by ottouti           #+#    #+#             */
-/*   Updated: 2023/10/30 20:39:58 by ottouti          ###   ########.fr       */
+/*   Updated: 2023/10/31 21:57:40 by ottouti          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,51 +43,20 @@ t_list	*find_last_node(t_list *list)
 	return (current);
 }
 
-void	copy_string(char *buffer, t_list *node)
+void	buffer_to_node(char *buffer, t_list *node, int str_len)
 {
 	int	i;
 
 	i = 0;
-	if (!node)
+	node -> str_buffer = (char *) malloc(str_len + 1);
+	if (!node || !node -> str_buffer)
 		return ;
-	node -> str_buffer = (char *) malloc(BUFFER_SIZE + 1);
-	if (!node -> str_buffer)
-	{
-		free(node);
-		return ;
-	}
 	while (buffer[i])
 	{
 		node -> str_buffer[i] = buffer[i];
 		i++;
 	}
 	node -> str_buffer[i] = '\0';
-}
-
-char	*append(t_list *list)
-{
-	int 	i;
-	int		j;
-	int 	len;
-	char	*line;
-	
-	if (!list)
-		return (NULL);
-	len = bytes_to_newline(list);
-	printf("len = %d\n", len);
-	line = (char *) malloc(len + 1 * sizeof(char));
-	if (!line)
-		return (NULL);
-	i = 0;
-	while (list)
-	{
-		j = 0;
-		while (list -> str_buffer[j] && i != len)
-			line[i++] = list -> str_buffer[j++];
-		list = list -> next;
-	}
-	line[i] = '\0';
-	return (line);
 }
 
 int	bytes_to_newline(t_list *list)
@@ -110,4 +79,28 @@ int	bytes_to_newline(t_list *list)
 		list = list -> next;
 	}
 	return (len);
+}
+
+void	copy_leftover(t_list *list, char *node_str)
+{
+	int		i;
+	int		j;
+	t_list	*last_node;
+
+	last_node = find_last_node(list);
+	if (!last_node || !last_node->str_buffer)
+		return ;
+	j = 0;
+	while (last_node->str_buffer[j] && last_node->str_buffer[j] != '\n')
+		j++;
+	if (last_node->str_buffer[j] == '\n')
+	{
+		j++;
+		i = 0;
+		while (last_node->str_buffer[j])
+			node_str[i++] = last_node->str_buffer[j++];
+		node_str[i] = '\0';
+	}
+	else
+		node_str[0] = '\0';
 }
