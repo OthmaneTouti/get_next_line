@@ -6,7 +6,7 @@
 /*   By: ottouti <ottouti@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:41:14 by ottouti           #+#    #+#             */
-/*   Updated: 2023/10/31 21:57:40 by ottouti          ###   ########.fr       */
+/*   Updated: 2023/11/02 12:48:35 by ottouti          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	bytes_to_newline(t_list *list)
 	int len;
 	int	i;
 
-	len = 0;
+	len = 1;
 	if (!list)
 		return (len);
 	while (list)

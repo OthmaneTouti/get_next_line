@@ -6,28 +6,36 @@
 /*   By: ottouti <ottouti@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:22:03 by ottouti           #+#    #+#             */
-/*   Updated: 2023/10/31 21:57:50 by ottouti          ###   ########.fr       */
+/*   Updated: 2023/11/02 13:00:46 by ottouti          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-void	clean_list(t_list **list)
+void clean_list(t_list **list)
 {
-	t_list	*clean_node;
-	
-	clean_node = (t_list *) malloc(sizeof(t_list));
-	if (!clean_node)
-		return ;
-	clean_node -> str_buffer = (char *) malloc(BUFFER_SIZE + 1);
-	if (!clean_node -> str_buffer)
-		return ;
-	clean_node -> next = NULL;
-	copy_leftover(*list, clean_node -> str_buffer);
-	delete_list(list);
-	*list = clean_node;
+    t_list  *clean_node;
+
+    if (!list || !(*list))
+        return ;
+    clean_node = (t_list *) malloc(sizeof(t_list));
+    if (!clean_node)
+        return ;
+    clean_node->str_buffer = (char *) malloc(BUFFER_SIZE + 1);
+    if (!clean_node->str_buffer)
+    {
+        free(clean_node);
+		clean_node = NULL;
+        delete_list(list);
+        return;
+    }
+    clean_node->next = NULL;
+    copy_leftover(*list, clean_node->str_buffer);
+    delete_list(list);
+    *list = clean_node;
 }
+
 
 void	delete_list(t_list **list)
 {
@@ -69,23 +77,36 @@ char *find_line(t_list *list)
 	return (line);
 }
 
-void	create_list(t_list **list, int fd, char * buffer)
+void create_list(t_list **list, int fd, char *buffer)
 {
-    int		bytes_read;
-    t_list	*new_node;
-    t_list	*last_node;
+    int     bytes_read;
+    t_list  *new_node;
+    t_list  *last_node;
 
     while (!found_newline(*list))
     {
-        new_node = (t_list *) malloc(sizeof(t_list));
+        new_node = (t_list *)malloc(sizeof(t_list));
         if (!new_node)
-            return ;
+        {
+            delete_list(list);
+            return;
+        }
+        new_node->str_buffer = NULL;
+        new_node->next = NULL;
         bytes_read = read(fd, buffer, BUFFER_SIZE);
-        if (bytes_read <= 0)
+        if (bytes_read < 0)
         {
             free(new_node);
-			delete_list(list);
-			(*list) = NULL;
+			new_node = NULL;
+            delete_list(list);
+            return;
+        }
+        else if (bytes_read == 0)
+        {
+			if (*list && !(*list) -> str_buffer[0])
+				delete_list(list);
+            free(new_node);
+			new_node = NULL;
             return ;
         }
         buffer[bytes_read] = '\0';
@@ -93,20 +114,19 @@ void	create_list(t_list **list, int fd, char * buffer)
         if (!last_node)
             *list = new_node;
         else
-            last_node -> next = new_node;
+            last_node->next = new_node;
         buffer_to_node(buffer, new_node, bytes_read);
         new_node -> next = NULL;
     }
 }
 
-
 char *get_next_line(int fd)
 {
-    static t_list	*list;
-    char			*buffer;
-    char			*line;
+    static t_list   *list;
+    char            *buffer;
+    char            *line;
 
-    buffer = (char *) malloc(BUFFER_SIZE + 1);
+    buffer = (char *)malloc(BUFFER_SIZE + 1);
     if (!buffer)
         return (NULL);
     create_list(&list, fd, buffer);
