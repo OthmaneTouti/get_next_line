@@ -119,9 +119,41 @@ int	main(void)
 	// close(fd);
 	// printf("---------------------------------------\n\n");
 
-	printf("TEST 8, one char no nl\n");
+	// printf("TEST 8, one char no nl\n");
+	// lines = 1;
+	// fd = open("text_files/test8.txt", O_RDONLY | O_CREAT);
+	// if (fd < 0)
+	// {
+	// 	printf("Error opening file");
+	// 	return (1);
+	// }
+	// while ((line = get_next_line(fd)))
+	// {
+	// 	printf("%d -> %s", lines++, line);
+	// 	free(line);
+	// }
+	// close(fd);
+	// printf("---------------------------------------\n\n");
+
+	// printf("TEST 9, variable nl\n");
+	// lines = 1;
+	// fd = open("text_files/test9.txt", O_RDONLY | O_CREAT);
+	// if (fd < 0)
+	// {
+	// 	printf("Error opening file");
+	// 	return (1);
+	// }
+	// while ((line = get_next_line(fd)))
+	// {
+	// 	printf("%d -> %s", lines++, line);
+	// 	free(line);
+	// }
+	// close(fd);
+	// printf("---------------------------------------\n\n");
+
+	printf("TEST 10, 2 lines, no nl\n");
 	lines = 1;
-	fd = open("text_files/test8.txt", O_RDONLY | O_CREAT);
+	fd = open("text_files/test10.txt", O_RDONLY | O_CREAT);
 	if (fd < 0)
 	{
 		printf("Error opening file");
@@ -129,7 +161,7 @@ int	main(void)
 	}
 	while ((line = get_next_line(fd)))
 	{
-		printf("%d -> %s\n", lines++, line);
+		printf("%d -> %s", lines++, line);
 		free(line);
 	}
 	close(fd);
