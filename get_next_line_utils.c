@@ -5,102 +5,96 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ottouti <ottouti@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/29 14:41:14 by ottouti           #+#    #+#             */
-/*   Updated: 2023/11/02 12:48:35 by ottouti          ###   ########.fr       */
+/*   Created: 2023/10/29 07:57:36 by ottouti           #+#    #+#             */
+/*   Updated: 2023/11/03 17:50:10 by ottouti          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
+/*Parses list and looks for newline*/
 int	found_newline(t_list *list)
 {
-	int	i;
-	t_list	*last_node;
-	
-	if (!list)
+	int		i;
+	t_list	*current;
+
+	if (list == NULL)
 		return (0);
-	last_node = find_last_node(list);
+	current = get_last_node(list);
 	i = 0;
-	while(last_node -> str_buffer[i])
+	while (current->str_buffer[i])
 	{
-		if (last_node -> str_buffer[i] == '\n')
+		if (current->str_buffer[i] == '\n')
 			return (1);
 		i++;
 	}
 	return (0);
 }
 
-t_list	*find_last_node(t_list *list)
+/*Returns the last node of the list*/
+t_list	*get_last_node(t_list *list)
 {
 	t_list	*current;
 
-	if (!list)
+	if (!list || list -> str_buffer == NULL)
 		return (NULL);
 	current = list;
-	while (current -> next != NULL)
-		current = current -> next;
+	while (current && current->next)
+		current = current->next;
 	return (current);
 }
 
-void	buffer_to_node(char *buffer, t_list *node, int str_len)
+/*Finds num of bytes before nl and allocates memory for line*/
+void	create_line(char **line, t_list *list)
 {
 	int	i;
+	int	len;
 
-	i = 0;
-	node -> str_buffer = (char *) malloc(str_len + 1);
-	if (!node || !node -> str_buffer)
-		return ;
-	while (buffer[i])
-	{
-		node -> str_buffer[i] = buffer[i];
-		i++;
-	}
-	node -> str_buffer[i] = '\0';
-}
-
-int	bytes_to_newline(t_list *list)
-{
-	int len;
-	int	i;
-
-	len = 1;
+	len = 0;
 	if (!list)
-		return (len);
+		return ;
 	while (list)
 	{
 		i = 0;
-		while (list -> str_buffer[i] != '\n'
-			&& list -> str_buffer[i] != '\0')
+		while (list->str_buffer[i])
 		{
-			i++;
+			if (list->str_buffer[i] == '\n')
+			{
+				len++;
+				break ;
+			}
 			len++;
+			i++;
 		}
-		list = list -> next;
+		list = list->next;
 	}
-	return (len);
+	*line = malloc(sizeof(char) * (len + 1));
 }
 
-void	copy_leftover(t_list *list, char *node_str)
+/*Clears the list*/
+void	delete_list(t_list **list)
 {
-	int		i;
-	int		j;
-	t_list	*last_node;
+	t_list	*current;
+	t_list	*next;
 
-	last_node = find_last_node(list);
-	if (!last_node || !last_node->str_buffer)
-		return ;
-	j = 0;
-	while (last_node->str_buffer[j] && last_node->str_buffer[j] != '\n')
-		j++;
-	if (last_node->str_buffer[j] == '\n')
+	current = *list;
+	while (current)
 	{
-		j++;
-		i = 0;
-		while (last_node->str_buffer[j])
-			node_str[i++] = last_node->str_buffer[j++];
-		node_str[i] = '\0';
+		free(current->str_buffer);
+		next = current->next;
+		free(current);
+		current = next;
 	}
-	else
-		node_str[0] = '\0';
+	*list = NULL;
+}
+
+/*Finds length of string*/
+int	ft_strlen(const char *str)
+{
+	int	len;
+
+	len = 0;
+	while (*(str++))
+		len++;
+	return (len);
 }

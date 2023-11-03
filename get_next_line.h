@@ -6,36 +6,35 @@
 /*   By: ottouti <ottouti@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:22:04 by ottouti           #+#    #+#             */
-/*   Updated: 2023/11/02 17:34:29 by ottouti          ###   ########.fr       */
+/*   Updated: 2023/11/03 17:44:32 by ottouti          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 10
-#endif
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
 
-#include <fcntl.h>
-#include <stdlib.h>
-#include <unistd.h>
+# include <fcntl.h>
+# include <stdlib.h>
+# include <unistd.h>
 
-typedef struct	s_list
+typedef struct s_list
 {
 	char			*str_buffer;
 	struct s_list	*next;
 }				t_list;
 
 char	*get_next_line(int fd);
-char	*find_line(t_list *list);
-void	create_list(t_list **list, int fd, char *buffer);
-t_list	*find_last_node(t_list *list);
-int		found_newline(t_list *list);
-int		bytes_to_newline(t_list *list);
-void	buffer_to_node(char *buffer, t_list *node, int str_len);
-void	delete_list(t_list **list);
-void	copy_leftover(t_list *list, char *node_str);
+void	create_list(int fd, t_list **list);
+void	add_to_list(t_list **list, char *buffer, int bytes_read);
+void	extract_line(t_list *list, char **line);
 void	clean_list(t_list **list);
-
+void	create_line(char **line, t_list *list);
+void	delete_list(t_list **list);
+t_list	*get_last_node(t_list *list);
+int		ft_strlen(const char *str);
+int		found_newline(t_list *list);
 #endif
