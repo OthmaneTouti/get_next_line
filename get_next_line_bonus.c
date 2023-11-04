@@ -6,7 +6,7 @@
 /*   By: ottouti <ottouti@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 07:57:36 by ottouti           #+#    #+#             */
-/*   Updated: 2023/11/04 08:59:37 by ottouti          ###   ########.fr       */
+/*   Updated: 2023/11/04 10:18:25 by ottouti          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	create_list(int fd, t_list **list)
 	bytes_read = 1;
 	while (!found_newline(*list) && bytes_read != 0)
 	{
-		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		buffer = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		if (buffer == NULL)
 			return ;
 		bytes_read = (int)read(fd, buffer, BUFFER_SIZE);
@@ -64,23 +64,23 @@ void	create_list(int fd, t_list **list)
 			return ;
 		}
 		buffer[bytes_read] = '\0';
-		add_to_list(list, buffer, bytes_read);
+		create_node(list, buffer, bytes_read);
 		free(buffer);
 	}
 }
 
 /*Adds node to end of list*/
-void	add_to_list(t_list **list, char *buffer, int bytes_read)
+void	create_node(t_list **list, char *buffer, int bytes_read)
 {
 	int		i;
 	t_list	*last;
 	t_list	*new_node;
 
-	new_node = malloc(sizeof(t_list));
+	new_node = (t_list *) malloc(sizeof(t_list));
 	if (new_node == NULL)
 		return ;
 	new_node->next = NULL;
-	new_node->str_buffer = malloc(sizeof(char) * (bytes_read + 1));
+	new_node->str_buffer = (char *) malloc(sizeof(char) * (bytes_read + 1));
 	if (new_node->str_buffer == NULL)
 		return ;
 	i = 0;
@@ -136,7 +136,7 @@ void	clean_list(t_list **list)
 	int		i;
 	int		j;
 
-	clean_node = malloc(sizeof(t_list));
+	clean_node = (t_list *) malloc(sizeof(t_list));
 	if (list == NULL || clean_node == NULL)
 		return ;
 	clean_node->next = NULL;
@@ -146,7 +146,7 @@ void	clean_list(t_list **list)
 		i++;
 	if (last->str_buffer && last->str_buffer[i] == '\n')
 		i++;
-	clean_node->str_buffer = malloc(sizeof(char)
+	clean_node->str_buffer = (char *) malloc(sizeof(char)
 			* ((ft_strlen(last->str_buffer) - i) + 1));
 	if (clean_node->str_buffer == NULL)
 		return ;

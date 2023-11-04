@@ -6,7 +6,7 @@
 /*   By: ottouti <ottouti@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 07:57:36 by ottouti           #+#    #+#             */
-/*   Updated: 2023/11/03 17:50:10 by ottouti          ###   ########.fr       */
+/*   Updated: 2023/11/04 10:17:07 by ottouti          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	create_line(char **line, t_list *list)
 		}
 		list = list->next;
 	}
-	*line = malloc(sizeof(char) * (len + 1));
+	*line = (char *) malloc(sizeof(char) * (len + 1));
 }
 
 /*Clears the list*/

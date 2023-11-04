@@ -6,7 +6,7 @@
 /*   By: ottouti <ottouti@student.42quebec.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:22:04 by ottouti           #+#    #+#             */
-/*   Updated: 2023/11/03 17:44:32 by ottouti          ###   ########.fr       */
+/*   Updated: 2023/11/04 10:11:23 by ottouti          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_list
 
 char	*get_next_line(int fd);
 void	create_list(int fd, t_list **list);
-void	add_to_list(t_list **list, char *buffer, int bytes_read);
+void	create_node(t_list **list, char *buffer, int bytes_read);
 void	extract_line(t_list *list, char **line);
 void	clean_list(t_list **list);
 void	create_line(char **line, t_list *list);
